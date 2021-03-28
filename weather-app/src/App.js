@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { Flex, Box } from "rebass";
 import preset from "@rebass/preset";
@@ -11,6 +12,27 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export const App = () => {
+  const [locations, setLocations] = useState([]);
+  const [weather, setWeather] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const locationResponse = await fetch("http://localhost:3030/locations");
+        const weatherResponse = await fetch("http://localhost:3030/weather");
+        const locationData = await locationResponse.json();
+        const weatherData = await weatherResponse.json();
+
+        setLocations(locationData);
+        setWeather(weatherData);
+      } catch (err) {
+        console.log(`There was an error: ${err}`);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <GlobalStyles />
