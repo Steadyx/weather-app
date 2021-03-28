@@ -12,9 +12,16 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export const App = () => {
+  // State for locations
   const [locations, setLocations] = useState([]);
+  // State for weather
   const [weather, setWeather] = useState([]);
+  // State for postcode
+  const [postcode, setPostcode] = useState("");
+  // State for postcode
+  const [location, setLocation] = useState({});
 
+  // Fetch Data to pass down to components
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,13 +40,36 @@ export const App = () => {
     fetchData();
   }, []);
 
+  // Map over the values from locationns to check if postcode is valid
+  const validPostcode = (inputValue) => {
+    return locations.reduce((accum, currentVal) => {
+      console.log(inputValue);
+      if (currentVal.postcode === inputValue) {
+        return setLocation({ ...location, ...currentVal });
+      }
+      return accum;
+    }, {});
+  };
+
+  // Move the input handle into parent component
+  // so that the values can be tracked
+  const handleInput = (event) => {
+    const inputValue = event.target.value;
+    setPostcode(inputValue);
+    validPostcode(inputValue);
+  };
+
   return (
     <>
       <GlobalStyles />
       <ThemeProvider theme={preset}>
         <Flex>
           <Box mx="auto" maxWidth="1024px" width="100%">
-            <WeatherInput inputValue="Search for some weather" />
+            <WeatherInput
+              inputValue="Search for some weather"
+              handleInput={handleInput}
+              postcode={postcode}
+            />
           </Box>
         </Flex>
       </ThemeProvider>
