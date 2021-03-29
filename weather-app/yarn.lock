@@ -1645,6 +1645,13 @@
   dependencies:
     "reflexbox" "^4.0.6"
 
+"@rebass/layout@^4.0.6":
+  "integrity" "sha512-C/PwG30FnP/vFWe6Qrbkv0zLGeXMSE3MwYFOdWlIQ1GuPtFza0aXYfCwBa9lxOYtCeq464QxX1mCg8dnhWXz9Q=="
+  "resolved" "https://registry.npmjs.org/@rebass/layout/-/layout-4.0.6.tgz"
+  "version" "4.0.6"
+  dependencies:
+    "reflexbox" "^4.0.6"
+
 "@rebass/preset@^4.0.5":
   "integrity" "sha512-RsNZ6r6GjJj7dvis7J+fniekpzqGh+tQ+slIbSX0vUjoB9XTJrRHPnNAf2fcWJHxVfCbZWY1JNsuq3Fcdj1oJA=="
   "resolved" "https://registry.npmjs.org/@rebass/preset/-/preset-4.0.5.tgz"

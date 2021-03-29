@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createGlobalStyle } from "styled-components";
 import { ThemeProvider } from "@emotion/react";
 import { Flex, Box, Text } from "rebass";
+import { Tiles } from "@rebass/layout";
 import theme from "@rebass/preset";
 import { WeatherInput } from "./components/input/";
 import { WeatherCard } from "./components/weather-card/";
@@ -81,7 +82,7 @@ export const App = () => {
     <>
       <GlobalStyles />
       <ThemeProvider theme={theme}>
-        <Flex flexWrap="wrap" maxWidth="1200" mx="auto" pt={2} pr={2} pl={2}>
+        <Flex flexWrap="wrap" maxWidth="1024px" mx="auto" pt={2} pr={2} pl={2}>
           <Box mx="auto" width="100%" p={2}>
             <WeatherInput
               inputValue="Search for some weather"
@@ -95,11 +96,13 @@ export const App = () => {
               <Text fontFamily="monospace">{postcode}</Text>
             ))}
           </Box>
-          {forecast.map((forecast) => (
-            <Box width={1 / 2} p={2}>
-              <WeatherCard forecast={forecast} />
-            </Box>
-          ))}
+          <Tiles columns={[1, null, 2]}>
+            {forecast.map((forecast) => (
+              <Box width={1 / 1} p={2}>
+                <WeatherCard forecast={forecast} />
+              </Box>
+            ))}
+          </Tiles>
         </Flex>
       </ThemeProvider>
     </>
