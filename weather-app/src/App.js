@@ -43,6 +43,16 @@ export const App = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    return weather.reduce((accum, currentVal, index) => {
+      if (location[index] !== undefined) {
+        if (location[index].lat !== currentVal.coord.lat) {
+          return setForecast({ ...accum, ...currentVal });
+        }
+      }
+      return accum;
+    }, {});
+  }, [location, weather]);
   // Map over the values from locationns to check if postcode is valid
   const validPostcode = (inputValue) => {
     return locations.reduce((accum, currentVal) => {
@@ -60,14 +70,6 @@ export const App = () => {
 
     setPostcode(inputValue);
     validPostcode(inputValue);
-
-    weather.forEach((value, index) => {
-      if (location[index] !== undefined) {
-        if (location[index].lat !== value.coord.lat) {
-          return setForecast({ ...{}, ...value });
-        }
-      }
-    });
   };
 
   return (
