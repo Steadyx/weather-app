@@ -3,6 +3,7 @@ import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { Flex, Box } from "rebass";
 import preset from "@rebass/preset";
 import { WeatherInput } from "./components/input/";
+import { WeatherCard } from "./components/weather-card/";
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -18,8 +19,10 @@ export const App = () => {
   const [weather, setWeather] = useState([]);
   // State for postcode
   const [postcode, setPostcode] = useState("");
-  // State for postcode
+  // State for location
   const [location, setLocation] = useState({});
+  // State for forecast
+  const [forecast, setForecast] = useState({});
 
   // Fetch Data to pass down to components
   useEffect(() => {
@@ -43,38 +46,47 @@ export const App = () => {
   // Map over the values from locationns to check if postcode is valid
   const validPostcode = (inputValue) => {
     return locations.reduce((accum, currentVal) => {
-      console.log(inputValue);
       if (currentVal.postcode === inputValue) {
-        return setLocation({ ...location, ...currentVal });
+        return setLocation(() => accum.concat(currentVal));
       }
       return accum;
-    }, {});
+    }, []);
   };
 
   // Move the input handle into parent component
   // so that the values can be tracked
   const handleInput = (event) => {
     const inputValue = event.target.value;
+
     setPostcode(inputValue);
     validPostcode(inputValue);
+
+    weather.forEach((value, index) => {
+      if (location[index] !== undefined) {
+        if (location[index].lat !== value.coord.lat) {
+          return setForecast({ ...{}, ...value });
+        }
+      }
+    });
   };
 
   return (
     <>
       <GlobalStyles />
       <ThemeProvider theme={preset}>
-        <Flex>
-          <Box mx="auto" maxWidth="1024px" width="100%">
+        <Flex flexWrap="wrap" maxWidth="1024px" mx="auto" pt={2}>
+          <Box mx="auto" width="100%">
             <WeatherInput
               inputValue="Search for some weather"
               handleInput={handleInput}
               postcode={postcode}
             />
           </Box>
+          <Box width={1 / 1}>
+            <WeatherCard forecast={forecast} />
+          </Box>
         </Flex>
       </ThemeProvider>
     </>
   );
 };
-
-export default App;
