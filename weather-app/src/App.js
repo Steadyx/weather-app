@@ -20,8 +20,6 @@ export const App = () => {
   // State for weather
   const [weather, setWeather] = useState([]);
   // State for postcode
-  const [postcode, setPostcode] = useState("");
-  // State for location
   const [location, setLocation] = useState({});
   // State for forecast
   const [forecast, setForecast] = useState([]);
@@ -46,6 +44,7 @@ export const App = () => {
     fetchData();
   }, []);
 
+  // If a valid match for location is found populate the forecast array
   useEffect(() => {
     return weather.reduce((accum, currentVal) => {
       if (Math.floor(location.latitude) === Math.floor(currentVal.coord.lat)) {
@@ -54,7 +53,7 @@ export const App = () => {
         return accum;
       }
     }, []);
-  }, [location]);
+  }, [location, weather]);
 
   // Reduce over the values from locations to check if postcode is valid
   const validPostcode = (inputValue) => {
@@ -70,11 +69,11 @@ export const App = () => {
   // so that the values can be tracked
   const handleInput = (event) => {
     const inputValue = event.target.value;
+    // If the input value is 0 thens set back to default weather list
     if (inputValue.length === 0) {
       setForecast(weather);
     }
 
-    setPostcode(inputValue);
     validPostcode(inputValue);
   };
 
@@ -87,18 +86,19 @@ export const App = () => {
             <WeatherInput
               inputValue="Search for some weather"
               handleInput={handleInput}
-              postcode={postcode}
             />
           </Box>
           <Box width={1 / 1} p={2}>
             <Text fontFamily="monospace">valid postcodes: </Text>
             {locations.map(({ postcode }) => (
-              <Text fontFamily="monospace">{postcode}</Text>
+              <Text fontFamily="monospace" key={`postcode-${postcode}`} pt={2}>
+                {postcode}
+              </Text>
             ))}
           </Box>
           <Tiles columns={[1, null, 2]}>
-            {forecast.map((forecast) => (
-              <Box width={1 / 1} p={2}>
+            {forecast.map((forecast, index) => (
+              <Box width={1 / 1} p={2} key={`forecast-${index}`}>
                 <WeatherCard forecast={forecast} />
               </Box>
             ))}

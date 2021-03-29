@@ -11,7 +11,7 @@ export const WeatherCard = ({ forecast }) => {
   const kelvinToCelcius = (kelvin) => {
     return Math.floor(kelvin - 273.15);
   };
-  console.log(forecast);
+
   return (
     <Card
       width="100"
