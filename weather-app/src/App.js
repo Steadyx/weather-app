@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { ThemeProvider, createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
+import { ThemeProvider } from "@emotion/react";
 import { Flex, Box } from "rebass";
-import preset from "@rebass/preset";
+import theme from "@rebass/preset";
 import { WeatherInput } from "./components/input/";
 import { WeatherCard } from "./components/weather-card/";
 
@@ -44,16 +45,16 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
-    return weather.reduce((accum, currentVal, index) => {
+    return weather.reduce((accum, currentVal) => {
       if (Math.floor(location.latitude) === Math.floor(currentVal.coord.lat)) {
-        console.log("works");
-        return setForecast({ ...accum, ...currentVal });
+        return setWeather(accum.concat({ ...currentVal }));
       }
+
       return accum;
-    }, {});
-  }, [location, weather]);
-  //
-  // Map over the values from locationns to check if postcode is valid
+    }, []);
+  }, [location]);
+
+  // Reduce over the values from locations to check if postcode is valid
   const validPostcode = (inputValue) => {
     return locations.reduce((accum, currentVal) => {
       if (currentVal.postcode === inputValue) {
@@ -78,18 +79,20 @@ export const App = () => {
   return (
     <>
       <GlobalStyles />
-      <ThemeProvider theme={preset}>
-        <Flex flexWrap="wrap" maxWidth="1024px" mx="auto" pt={2}>
-          <Box mx="auto" width="100%">
+      <ThemeProvider theme={theme}>
+        <Flex flexWrap="wrap" maxWidth="1200" mx="auto" pt={2} pr={2} pl={2}>
+          <Box mx="auto" width="100%" bg="primary" p={2}>
             <WeatherInput
               inputValue="Search for some weather"
               handleInput={handleInput}
               postcode={postcode}
             />
           </Box>
-          <Box width={1 / 1}>
-            <WeatherCard forecast={forecast} />
-          </Box>
+          {weather.map((forecast) => (
+            <Box width={1 / 2} p={2}>
+              <WeatherCard forecast={forecast} />
+            </Box>
+          ))}
         </Flex>
       </ThemeProvider>
     </>
