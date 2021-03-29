@@ -45,28 +45,31 @@ export const App = () => {
 
   useEffect(() => {
     return weather.reduce((accum, currentVal, index) => {
-      if (location[index] !== undefined) {
-        if (location[index].lat !== currentVal.coord.lat) {
-          return setForecast({ ...accum, ...currentVal });
-        }
+      if (Math.floor(location.latitude) === Math.floor(currentVal.coord.lat)) {
+        console.log("works");
+        return setForecast({ ...accum, ...currentVal });
       }
       return accum;
     }, {});
   }, [location, weather]);
+  //
   // Map over the values from locationns to check if postcode is valid
   const validPostcode = (inputValue) => {
     return locations.reduce((accum, currentVal) => {
       if (currentVal.postcode === inputValue) {
-        return setLocation(() => accum.concat(currentVal));
+        return setLocation({ ...accum, ...currentVal });
       }
       return accum;
-    }, []);
+    }, {});
   };
 
   // Move the input handle into parent component
   // so that the values can be tracked
   const handleInput = (event) => {
     const inputValue = event.target.value;
+    if (inputValue.length === 0) {
+      setForecast({});
+    }
 
     setPostcode(inputValue);
     validPostcode(inputValue);
